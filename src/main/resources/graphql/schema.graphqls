@@ -1,0 +1,31 @@
+input CustomerRequestDTO{
+    customerName:String
+    phoneNo:String
+    address:String
+}
+
+type CustomerResponseDTO{
+    customerId:ID!
+    customerName:String
+    phoneNo:String
+    address:String
+}
+
+type Customer{
+    customerId:ID!
+    customerName:String
+    phoneNo:String
+    address:String
+}
+
+type Mutation{
+    createCustomer(customerRequestDTO:CustomerRequestDTO):CustomerResponseDTO
+}
+
+type Query{
+    getCustomers:[Customer]
+    getCustomer(customerId:Int):Customer
+    getCustomersDetails(customerName:String):[CustomerResponseDTO]
+    getContainingCustomersDetails(customerName:String):[CustomerResponseDTO]
+    deleteCustomer(customerId:Int):Boolean
+}

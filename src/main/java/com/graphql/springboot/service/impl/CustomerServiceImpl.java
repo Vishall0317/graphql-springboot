@@ -1,12 +1,10 @@
 package com.graphql.springboot.service.impl;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 import com.graphql.springboot.dto.CustomerRequestDTO;
-import com.graphql.springboot.dto.CustomerResponse;
 import com.graphql.springboot.dto.CustomerResponseDTO;
 import com.graphql.springboot.entity.Customer;
 import com.graphql.springboot.repo.CustomerRepository;
@@ -14,10 +12,6 @@ import com.graphql.springboot.service.CustomerService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-
-
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -26,21 +20,18 @@ public class CustomerServiceImpl implements CustomerService {
 	CustomerRepository customerRepository;
 	
 	@Override
-	public boolean saveCustomerData(CustomerRequestDTO customerRequestDTO) {
+	public CustomerResponseDTO saveCustomerData(CustomerRequestDTO customerRequestDTO) {
 	
 		var customer=new Customer();
 		
 		BeanUtils.copyProperties(customerRequestDTO, customer);
 		
 		 var savedCustomer=customerRepository.save(customer);
-		 if(ObjectUtils.isEmpty(savedCustomer)) {
-			 return false;
-		 }else {
-			 return true;
-		 }
+		 CustomerResponseDTO customerResponseDTO=new CustomerResponseDTO();
+		BeanUtils.copyProperties(savedCustomer, customerResponseDTO);
+		return customerResponseDTO;
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public List<CustomerResponseDTO> getCustomersDetails() {
 		
@@ -72,8 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 	
 	@Override
-	public List<CustomerResponse> getCustomersDetailsByName(String name) {
-		
+	public List<CustomerResponseDTO> getCustomersDetailsByName(String name) {
 		return customerRepository.findByCustomerName(name);
 	}
 
@@ -92,7 +82,6 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public boolean deleteCustomer(Integer customerId) {
-		
 		customerRepository.deleteById(customerId);
 		return true;
 	}
